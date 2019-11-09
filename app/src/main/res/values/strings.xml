@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">My Entertainment List</string>
+    <string name="tab_text_1">Movie</string>
+    <string name="tab_text_2">TV Show</string>
+    <string name="lorem"></string>
+    <string name="title_movies">Title</string>
+    <string name="change_language_settings">Change Language Settings</string>
+    <string name="title_category">Genres</string>
+    <string name="title_trivia">Trivia</string>
+    <string name="title_episodes">Number of Episodes</string>
+</resources>

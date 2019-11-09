@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Daftar Hiburan</string>
+    <string name="tab_text_1">Film</string>
+    <string name="tab_text_2">Acara TV</string>
+    <string name="lorem"></string>
+    <string name="title_movies">Judul</string>
+    <string name="change_language_settings">Ubah Pengaturan Bahasa</string>
+    <string name="title_episodes">Jumlah Episode</string>
+    <string name="title_category">Jenis</string>
+    <string name="title_trivia">Fakta Sepele</string>
+</resources>
