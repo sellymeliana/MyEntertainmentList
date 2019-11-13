@@ -25,6 +25,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     MovieFragment movieFragment;
     TVShowFragment tvShowFragment;
 
+
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;

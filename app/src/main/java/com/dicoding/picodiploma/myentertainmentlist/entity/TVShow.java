@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.myentertainmentlist.dummy;
+package com.dicoding.picodiploma.myentertainmentlist.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

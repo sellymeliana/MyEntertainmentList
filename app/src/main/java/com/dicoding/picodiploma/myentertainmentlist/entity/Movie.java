@@ -1,9 +1,7 @@
-package com.dicoding.picodiploma.myentertainmentlist.dummy;
+package com.dicoding.picodiploma.myentertainmentlist.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import androidx.core.text.HtmlCompat;
 
 public class Movie implements Parcelable {
     private String poster;

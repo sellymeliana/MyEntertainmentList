@@ -3,8 +3,8 @@ package com.dicoding.picodiploma.myentertainmentlist;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.dicoding.picodiploma.myentertainmentlist.dummy.Movie;
-import com.dicoding.picodiploma.myentertainmentlist.dummy.TVShow;
+import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
+import com.dicoding.picodiploma.myentertainmentlist.entity.TVShow;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.widget.Toolbar;

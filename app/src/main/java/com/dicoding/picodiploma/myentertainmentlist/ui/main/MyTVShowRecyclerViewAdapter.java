@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dicoding.picodiploma.myentertainmentlist.R;
 import com.dicoding.picodiploma.myentertainmentlist.TVShowFragment.OnListFragmentInteractionListener;
-import com.dicoding.picodiploma.myentertainmentlist.dummy.TVShow;
+import com.dicoding.picodiploma.myentertainmentlist.entity.TVShow;
 
 import java.util.ArrayList;
 import java.util.List;

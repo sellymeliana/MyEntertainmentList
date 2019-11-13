@@ -1,8 +1,7 @@
-package com.dicoding.picodiploma.myentertainmentlist.dummy;
+package com.dicoding.picodiploma.myentertainmentlist.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 public class Cast implements Parcelable {
 

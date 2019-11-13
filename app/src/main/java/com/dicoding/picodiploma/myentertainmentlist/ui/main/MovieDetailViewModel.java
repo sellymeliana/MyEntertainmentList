@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.dicoding.picodiploma.myentertainmentlist.dummy.Cast;
-import com.dicoding.picodiploma.myentertainmentlist.dummy.Movie;
+import com.dicoding.picodiploma.myentertainmentlist.entity.Cast;
+import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
