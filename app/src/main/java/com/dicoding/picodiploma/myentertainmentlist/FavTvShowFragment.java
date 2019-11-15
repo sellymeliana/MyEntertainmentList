@@ -1,6 +1,9 @@
 package com.dicoding.picodiploma.myentertainmentlist;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,11 +14,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dicoding.picodiploma.myentertainmentlist.db.TVShowHelper;
+import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
 import com.dicoding.picodiploma.myentertainmentlist.entity.TVShow;
 import com.dicoding.picodiploma.myentertainmentlist.helper.MappingHelper;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.MyTVShowRecyclerViewAdapter;
@@ -23,6 +28,8 @@ import com.dicoding.picodiploma.myentertainmentlist.ui.main.TVShowDetailViewMode
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.dicoding.picodiploma.myentertainmentlist.Main2Activity.ACTION_STATUS;
 
 
 /**
@@ -38,10 +45,13 @@ public class FavTvShowFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String FAV_TVSHOW_LIST = "fav_tvshow_list";
+
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+//    private String mParam1;
+//    private String mParam2;
+    private BroadcastReceiver actionReceiver;
 
 //    private OnFragmentInteractionListener mListener;
     private FavTvShowFragment.OnFragmentInteractionListener mListener;
@@ -84,11 +94,18 @@ public class FavTvShowFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(FAV_TVSHOW_LIST, tvShowArrayList);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,7 +127,9 @@ public class FavTvShowFragment extends Fragment {
         tvListener = new TVShowFragment.OnListFragmentInteractionListener() {
             @Override
             public void onListFragmentInteraction(TVShow item) {
-
+                Intent moveToDetailIntent = new Intent(getContext(), TVShowDetailActivity.class);
+                moveToDetailIntent.putExtra(TVShowDetailActivity.TVSHOW_DETAIL, item);
+                startActivity(moveToDetailIntent);
             }
         };
 
@@ -130,9 +149,28 @@ public class FavTvShowFragment extends Fragment {
             public void onChanged(ArrayList<TVShow> tvShows) {
                 tvShowArrayList.clear();
                 tvShowArrayList.addAll(tvShows);
+                myTVShowRecyclerViewAdapter.setData(tvShowArrayList);
                 myTVShowRecyclerViewAdapter.notifyDataSetChanged();
             }
         });
+
+        if (savedInstanceState != null) {
+            myTVShowRecyclerViewAdapter.setData(savedInstanceState.<TVShow>getParcelableArrayList(FAV_TVSHOW_LIST));
+            myTVShowRecyclerViewAdapter.notifyDataSetChanged();
+        } else {
+            tvShowDetailViewModel.setTVShowArrayList(tvShowArrayList);
+        }
+
+        actionReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                tvShowDetailViewModel.setTVShowArrayList(tvShowArrayList);
+                Log.d("broadcastbroadcast", "receive");
+            }
+        };
+        IntentFilter actionIntentFilter = new IntentFilter(ACTION_STATUS);
+        getActivity().registerReceiver(actionReceiver, actionIntentFilter);
+
 
         return view;
     }

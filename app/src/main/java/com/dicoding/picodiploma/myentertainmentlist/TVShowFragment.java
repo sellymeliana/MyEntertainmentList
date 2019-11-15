@@ -2,6 +2,7 @@ package com.dicoding.picodiploma.myentertainmentlist;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
 import com.dicoding.picodiploma.myentertainmentlist.entity.TVShow;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.MyTVShowRecyclerViewAdapter;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.TVShowViewModel;
@@ -34,7 +34,7 @@ public class TVShowFragment extends Fragment {
     MyTVShowRecyclerViewAdapter myTVShowRecyclerViewAdapter;
     private ProgressBar progressBar;
 
-    private static final String MOVIE_LIST = "movie_list";
+    private static final String TVSHOW_LIST = "tvshow_list";
 
     private TVShowViewModel tvShowViewModel;
 
@@ -78,7 +78,7 @@ public class TVShowFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(MOVIE_LIST, tvShows);
+        outState.putParcelableArrayList(TVSHOW_LIST, tvShows);
     }
 
     @Override
@@ -95,17 +95,17 @@ public class TVShowFragment extends Fragment {
         myTVShowRecyclerViewAdapter = new MyTVShowRecyclerViewAdapter(getContext(), mListener);
         recyclerView.setAdapter(myTVShowRecyclerViewAdapter);
 
-//        ((MainActivity)getActivity()).setOnTVActivityListener(new MainActivity.OnTVActivityListener() {
-//            @Override
-//            public void onTVActivityRefreshListener() {
-//                Log.d("refreshMovies", "onTVActivityRefreshListener");
-//                tvShowViewModel.setTVShow();
-//                showLoading(true);
-//            }
-//        });
+        ((Main2Activity)getActivity()).setOnTVActivityListener(new Main2Activity.OnTVActivityListener() {
+            @Override
+            public void onTVActivityRefreshListener() {
+                Log.d("refreshMovies", "onTVActivityRefreshListener");
+                tvShowViewModel.setTVShow();
+                showLoading(true);
+            }
+        });
 
         if (savedInstanceState != null) {
-            myTVShowRecyclerViewAdapter.setData(savedInstanceState.<TVShow>getParcelableArrayList(MOVIE_LIST));
+            myTVShowRecyclerViewAdapter.setData(savedInstanceState.<TVShow>getParcelableArrayList(TVSHOW_LIST));
             myTVShowRecyclerViewAdapter.notifyDataSetChanged();
         } else {
             tvShowViewModel.setTVShow();

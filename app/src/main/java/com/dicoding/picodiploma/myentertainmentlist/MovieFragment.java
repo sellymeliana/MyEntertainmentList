@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
-import com.dicoding.picodiploma.myentertainmentlist.entity.TVShow;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.MovieViewModel;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.MyMovieRecyclerViewAdapter;
 
@@ -30,7 +29,7 @@ import java.util.ArrayList;
  */
 public class MovieFragment extends Fragment {
 
-    private ArrayList<Movie> movies2=new ArrayList<>();
+    private ArrayList<Movie> movies2 = new ArrayList<>();
 
     RecyclerView recyclerView;
     MyMovieRecyclerViewAdapter myMovieRecyclerViewAdapter;
@@ -87,14 +86,14 @@ public class MovieFragment extends Fragment {
 
         movieViewModel = new ViewModelProvider(this, new ViewModelProvider.NewInstanceFactory()).get(MovieViewModel.class);
 
-//        ((MainActivity)getActivity()).setOnActivityListener(new MainActivity.OnActivityListener() {
-//            @Override
-//            public void onActivityRefreshListener() {
-//                Log.d("refreshMovies", "onActivityRefreshListener");
-//                movieViewModel.setMovies();
-//                showLoading(true);
-//            }
-//        });
+        ((Main2Activity)getActivity()).setOnActivityListener(new Main2Activity.OnMovieActivityListener() {
+            @Override
+            public void onActivityRefreshListener() {
+                Log.d("refreshMovies", "onActivityRefreshListener");
+                movieViewModel.setMovies();
+                showLoading(true);
+            }
+        });
 
         progressBar = view.findViewById(R.id.progressBar);
         Context context = view.getContext();

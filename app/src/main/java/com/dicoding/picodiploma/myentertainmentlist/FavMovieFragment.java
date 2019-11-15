@@ -1,6 +1,9 @@
 package com.dicoding.picodiploma.myentertainmentlist;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dicoding.picodiploma.myentertainmentlist.db.MovieHelper;
 import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
@@ -24,6 +28,8 @@ import com.dicoding.picodiploma.myentertainmentlist.ui.main.MyMovieRecyclerViewA
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.dicoding.picodiploma.myentertainmentlist.Main2Activity.ACTION_STATUS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,10 +44,13 @@ public class FavMovieFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String FAV_MOVIE_LIST = "fav_movie_list";
+
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+//    private String mParam1;
+//    private String mParam2;
+    private BroadcastReceiver actionReceiver;
 
     private OnFragmentInteractionListener mListener;
     private MovieFragment.OnListFragmentInteractionListener movieListener;
@@ -49,7 +58,7 @@ public class FavMovieFragment extends Fragment {
 
     private MovieHelper movieHelper;
     private Cursor curMovies;
-    ArrayList<Movie> movieArrayList= new ArrayList<>();
+    ArrayList<Movie> movieArrayList = new ArrayList<>();
     HashMap <Integer, Integer> hashMap = new HashMap();
 
 
@@ -74,15 +83,19 @@ public class FavMovieFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(FAV_MOVIE_LIST, movieArrayList);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         Log.d("tag","oncreate");
         movieHelper = MovieHelper.getInstance(getContext());
         movieHelper.open();
@@ -100,7 +113,9 @@ public class FavMovieFragment extends Fragment {
         movieListener = new MovieFragment.OnListFragmentInteractionListener() {
             @Override
             public void onListFragmentInteraction(Movie item) {
-
+                Intent moveToDetailIntent = new Intent(getContext(), MovieDetailActivity.class);
+                moveToDetailIntent.putExtra(MovieDetailActivity.MOVIE_DETAIL, item);
+                startActivity(moveToDetailIntent);
             }
         };
 
@@ -120,9 +135,28 @@ public class FavMovieFragment extends Fragment {
             public void onChanged(ArrayList<Movie> movies) {
                 movieArrayList.clear();
                 movieArrayList.addAll(movies);
+                myMovieRecyclerViewAdapter.setData(movieArrayList);
                 myMovieRecyclerViewAdapter.notifyDataSetChanged();
             }
         });
+
+        if (savedInstanceState != null) {
+            myMovieRecyclerViewAdapter.setData(savedInstanceState.<Movie>getParcelableArrayList(FAV_MOVIE_LIST));
+            myMovieRecyclerViewAdapter.notifyDataSetChanged();
+        } else {
+            Log.d("refreshFavMovies", "TRUE");
+            movieDetailViewModel.setMovieArrayList(movieArrayList);
+        }
+
+        actionReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                movieDetailViewModel.setMovieArrayList(movieArrayList);
+                Log.d("broadcastbroadcast", "receive");
+            }
+        };
+        IntentFilter actionIntentFilter = new IntentFilter(ACTION_STATUS);
+        getActivity().registerReceiver(actionReceiver, actionIntentFilter);
 
         return view;
     }
@@ -142,6 +176,14 @@ public class FavMovieFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (actionReceiver != null) {
+            getActivity().unregisterReceiver(actionReceiver);
+        }
     }
 
     /**

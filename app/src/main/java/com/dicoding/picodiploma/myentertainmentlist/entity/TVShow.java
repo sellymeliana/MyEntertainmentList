@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class TVShow implements Parcelable {
-    private String poster;
-    private String title;
-    private String description;
+    private String poster = "";;
+    private String title = "";;
+    private String description = "";;
 
     private int tvshow_id;
 

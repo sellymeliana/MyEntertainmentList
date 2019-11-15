@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Movie implements Parcelable {
-    private String poster="";
-    private String title="";
-    private String description="";
+    private String poster = "";
+    private String title = "";
+    private String description = "";
 
     private int movie_id;
 

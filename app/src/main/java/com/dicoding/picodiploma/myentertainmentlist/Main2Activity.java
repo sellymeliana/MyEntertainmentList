@@ -1,5 +1,6 @@
 package com.dicoding.picodiploma.myentertainmentlist;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,10 +29,11 @@ public class Main2Activity extends AppCompatActivity
         FavTvShowFragment.OnFragmentInteractionListener {
 
     private int REQUEST_CODE = 100;
+    public static final String ACTION_STATUS = "action_status";
     Toolbar mtoolbar;
     private SectionsPagerAdapter sectionsPagerAdapter;
-    private MainActivity.OnActivityListener mOnActivityListener;
-    private MainActivity.OnTVActivityListener mOnTVActivityListener;
+    private OnMovieActivityListener mOnActivityListener;
+    private OnTVActivityListener tvOnActivityListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,51 +70,47 @@ public class Main2Activity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_CODE) {
-//            Log.d("refreshMovies", "Request Code");
-//            mOnActivityListener.onActivityRefreshListener();
-//            mOnTVActivityListener.onTVActivityRefreshListener();
-//        }
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            Log.d("refreshMovies", "Request Code");
+            if (mOnActivityListener != null)
+                mOnActivityListener.onActivityRefreshListener();
+            if (tvOnActivityListener != null)
+                tvOnActivityListener.onTVActivityRefreshListener();
+        }
+
+        Intent notifyFinishIntent = new Intent(ACTION_STATUS);
+        sendBroadcast(notifyFinishIntent);
+        Log.d("broadcastbroadcast", "send");
+    }
 
     @Override
     public void onListFragmentInteraction(Movie item) {
-        Intent moveToDetailIntent = new Intent(this, MovieDetailActivity.class);
+        Intent moveToDetailIntent = new Intent(Main2Activity.this, MovieDetailActivity.class);
         moveToDetailIntent.putExtra(MovieDetailActivity.MOVIE_DETAIL, item);
         startActivity(moveToDetailIntent);
     }
 
     @Override
     public void onListFragmentInteraction(TVShow item) {
-        Intent moveToDetailIntent = new Intent(this, TVShowDetailActivity.class);
+        Intent moveToDetailIntent = new Intent(Main2Activity.this, TVShowDetailActivity.class);
         moveToDetailIntent.putExtra(TVShowDetailActivity.TVSHOW_DETAIL, item);
         startActivity(moveToDetailIntent);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            Log.d("refreshMovies", "Request Code");
-            mOnActivityListener.onActivityRefreshListener();
-            mOnTVActivityListener.onTVActivityRefreshListener();
-        }
-    }
-
-    public void setOnActivityListener(MainActivity.OnActivityListener mOnActivityListener){
+    public void setOnActivityListener(OnMovieActivityListener mOnActivityListener){
         this.mOnActivityListener = mOnActivityListener;
     }
 
-    public interface OnActivityListener {
+    public interface OnMovieActivityListener {
         // TODO: Update argument type and name
         void onActivityRefreshListener();
     }
 
-    public void setOnTVActivityListener(MainActivity.OnTVActivityListener mOnActivityListener){
-        this.mOnTVActivityListener = mOnActivityListener;
+    public void setOnTVActivityListener(OnTVActivityListener mOnActivityListener){
+        this.tvOnActivityListener = mOnActivityListener;
     }
 
     public interface OnTVActivityListener {

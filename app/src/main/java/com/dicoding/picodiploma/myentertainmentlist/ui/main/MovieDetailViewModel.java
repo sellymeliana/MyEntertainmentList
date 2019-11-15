@@ -122,7 +122,7 @@ public class MovieDetailViewModel extends ViewModel {
         String countryCode = locale.getCountry();
         String langCode = countryCode == "ID" ? "id-ID" : "en-US";
 
-        for (int i=0; i<movieArrayList.size();i++) {
+        for (int i=0; i<movieArrayListP.size();i++) {
             String url = "https://api.themoviedb.org/3/movie/" + movieArrayList.get(i).getMovie_id() + "?api_key=" + API_KEY + "&language=" + langCode;
 
             final int finalI = i;
@@ -152,16 +152,13 @@ public class MovieDetailViewModel extends ViewModel {
                         genre = genres.getJSONObject(genres.length() - 1);
                         genreStr += genre.getString("name");
 
+
                         movie.setCategory(genreStr);
                         movie.setTrivia(responseObject.getString("tagline"));
 
-                        Log.d("MovieDetailViewModel ", "index "+finalI);
-
-                        Log.d("MovieDetailViewModel ", "size "+movieArrayList.size());
-
-                        Log.d("MovieDetailViewModel ", "id "+movieArrayList.get(finalI).getTitle());
-
                         movieArrayList.set(finalI, movie);
+
+                        Log.d("broadcastbroadcast", "desk "+finalI+" "+movie.getDescription());
                         mutableArrayListLiveData.postValue(movieArrayList);
 
 

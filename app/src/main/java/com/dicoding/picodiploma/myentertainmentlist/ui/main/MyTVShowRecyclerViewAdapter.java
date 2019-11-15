@@ -54,7 +54,7 @@ public class MyTVShowRecyclerViewAdapter extends RecyclerView.Adapter<MyTVShowRe
         circularProgressDrawable.start();
 
         holder.txtName.setText(holder.tvItem.getTitle());
-        holder.txtDescription.setText(holder.tvItem.getDescription());// (HtmlCompat.fromHtml(holder.tvItem.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+        holder.txtDescription.setText(HtmlCompat.fromHtml(holder.tvItem.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
         Glide.with(context)
                 .load("https://image.tmdb.org/t/p/w185" + holder.tvItem.getPoster())
                 .placeholder(circularProgressDrawable)
