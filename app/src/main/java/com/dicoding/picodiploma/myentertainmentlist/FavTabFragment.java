@@ -1,17 +1,14 @@
 package com.dicoding.picodiploma.myentertainmentlist;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +17,20 @@ import com.dicoding.picodiploma.myentertainmentlist.ui.main.SectionsPagerAdapter
 import com.google.android.material.tabs.TabLayout;
 
 
-public class FavFragment extends Fragment {
-
-    private RecyclerView mRecyclerView;
+public class FavTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_fav, container, false);
+        View view = inflater.inflate(R.layout.fragment_tab_fav, container, false);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText("Movies"));
-        tabLayout.addTab(tabLayout.newTab().setText("TV Shows"));
+        //tabLayout.addTab(tabLayout.newTab().setText("Movies"));
+        //tabLayout.addTab(tabLayout.newTab().setText("TV Shows"));
         final ViewPager viewPager = view.findViewById(R.id.viewpager);
-
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getContext(), getFragmentManager());
+//        viewPager.setOffscreenPageLimit(2);
+//        SectionsPagerAdapter sectionsPagerAdapter =
+//                new SectionsPagerAdapter(getContext(), getFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter =
+                new SectionsPagerAdapter(getContext(), getChildFragmentManager());
         viewPager.setAdapter(sectionsPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -71,7 +69,7 @@ public class FavFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-
+            Log.d("getitemposition", String.valueOf(position));
             switch (position) {
                 case 0:
                     return new FavMovieFragment();

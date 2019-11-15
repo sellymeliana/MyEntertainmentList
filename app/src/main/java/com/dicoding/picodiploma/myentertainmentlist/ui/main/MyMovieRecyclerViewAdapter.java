@@ -2,8 +2,10 @@ package com.dicoding.picodiploma.myentertainmentlist.ui.main;
 
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +27,8 @@ import java.util.List;
  */
 public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Movie> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private List<Movie> mValues;
+    public final OnListFragmentInteractionListener mListener;
     private final Context context;
 
     public MyMovieRecyclerViewAdapter(Context context, OnListFragmentInteractionListener listener) {
@@ -45,11 +47,15 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-
+        CircularProgressDrawable circularProgressDrawable=new CircularProgressDrawable(context);
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(15f);
+        circularProgressDrawable.start();
         holder.txtName.setText(holder.mItem.getTitle());
         holder.txtDescription.setText(HtmlCompat.fromHtml(holder.mItem.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
         Glide.with(context)
                 .load("https://image.tmdb.org/t/p/w185" + holder.mItem.getPoster())
+                .placeholder(circularProgressDrawable)
                 .into(holder.imgPhoto);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -83,14 +89,13 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
             txtName = view.findViewById(R.id.txt_title);
             txtDescription = view.findViewById(R.id.txt_description);
             imgPhoto = view.findViewById(R.id.img_poster);
-
         }
     }
 
     public void setData (List<Movie> items) {
         if(items.equals(null))
             return;
-        mValues.clear();
-        mValues.addAll(items);
+
+        mValues=items;
     }
 }

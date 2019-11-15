@@ -18,8 +18,8 @@
         tools:layout="@layout/fragment_tvshow" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.dicoding.picodiploma.myentertainmentlist.FavFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_fav"
+        android:name="com.dicoding.picodiploma.myentertainmentlist.FavTabFragment"
+        android:label="@string/title_fav"
+        tools:layout="@layout/fragment_tab_fav" />
 </navigation>

@@ -1,16 +1,29 @@
 package com.dicoding.picodiploma.myentertainmentlist;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dicoding.picodiploma.myentertainmentlist.db.MovieHelper;
+import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
+import com.dicoding.picodiploma.myentertainmentlist.helper.MappingHelper;
+import com.dicoding.picodiploma.myentertainmentlist.ui.main.MovieDetailViewModel;
+import com.dicoding.picodiploma.myentertainmentlist.ui.main.MyMovieRecyclerViewAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +44,15 @@ public class FavMovieFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private MovieFragment.OnListFragmentInteractionListener movieListener;
+    private MovieDetailViewModel movieDetailViewModel;
+
+    private MovieHelper movieHelper;
+    private Cursor curMovies;
+    ArrayList<Movie> movieArrayList= new ArrayList<>();
+    HashMap <Integer, Integer> hashMap = new HashMap();
+
+
 
     public FavMovieFragment() {
         // Required empty public constructor
@@ -40,16 +62,11 @@ public class FavMovieFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FavMovieFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static FavMovieFragment newInstance(String param1, String param2) {
+    public static FavMovieFragment newInstance() {
         FavMovieFragment fragment = new FavMovieFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,15 +83,48 @@ public class FavMovieFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fav_movie, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        Log.d("tag","oncreate");
+        movieHelper = MovieHelper.getInstance(getContext());
+        movieHelper.open();
+        curMovies = movieHelper.queryAll();
+        movieArrayList.addAll(MappingHelper.mapMovieCursorToArrayList(curMovies));
+        for (int ii=0; ii<movieArrayList.size(); ii++) {
+            hashMap.put (movieArrayList.get(ii).getMovie_id(), ii);
         }
+        curMovies.close();
+
+        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        movieListener = new MovieFragment.OnListFragmentInteractionListener() {
+            @Override
+            public void onListFragmentInteraction(Movie item) {
+
+            }
+        };
+
+        final MyMovieRecyclerViewAdapter myMovieRecyclerViewAdapter
+                = new MyMovieRecyclerViewAdapter(getContext(), movieListener);
+
+        recyclerView.setAdapter(myMovieRecyclerViewAdapter);
+        myMovieRecyclerViewAdapter.setData(movieArrayList);
+        myMovieRecyclerViewAdapter.notifyDataSetChanged();
+
+        movieDetailViewModel = new ViewModelProvider(this,
+                new ViewModelProvider.NewInstanceFactory()).get(MovieDetailViewModel.class);
+
+        movieDetailViewModel.setMovieArrayList(movieArrayList);
+        movieDetailViewModel.getMovieArrayList().observe (this, new Observer<ArrayList<Movie>>() {
+            @Override
+            public void onChanged(ArrayList<Movie> movies) {
+                movieArrayList.clear();
+                movieArrayList.addAll(movies);
+                myMovieRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -105,7 +155,14 @@ public class FavMovieFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+//        // TODO: Update argument type and name
+//        void onFragmentInteraction(Uri uri);
     }
+
+//    public void setData (List<Movie> items) {
+//        if(items.equals(null))
+//            return;
+//        movieArrayList.clear();
+//        movieArrayList.addAll(items);
+//    }
 }

@@ -2,6 +2,7 @@ package com.dicoding.picodiploma.myentertainmentlist.ui.main;
 
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,28 +12,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.dicoding.picodiploma.myentertainmentlist.R;
 import com.dicoding.picodiploma.myentertainmentlist.TVShowFragment.OnListFragmentInteractionListener;
+import com.dicoding.picodiploma.myentertainmentlist.R;
 import com.dicoding.picodiploma.myentertainmentlist.entity.TVShow;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link } and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyTVShowRecyclerViewAdapter extends RecyclerView.Adapter<MyTVShowRecyclerViewAdapter.ViewHolder> {
 
-    private final List<TVShow> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private List<TVShow> tvValues;
+    public final OnListFragmentInteractionListener mListener;
     private final Context context;
-
 
     public MyTVShowRecyclerViewAdapter(Context context, OnListFragmentInteractionListener listener) {
         this.context = context;
-        mValues = new ArrayList<>();
+        tvValues = new ArrayList<>();
         mListener = listener;
     }
 
@@ -45,13 +45,19 @@ public class MyTVShowRecyclerViewAdapter extends RecyclerView.Adapter<MyTVShowRe
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.txtName.setText(holder.mItem.getTitle());
-        holder.txtDescription.setText(HtmlCompat.fromHtml(holder.mItem.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
 
-//        holder.imgPhoto.setImageResource(holder.mItem.getPoster());
+        holder.tvItem = tvValues.get(position);
+
+        CircularProgressDrawable circularProgressDrawable=new CircularProgressDrawable(context);
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(15f);
+        circularProgressDrawable.start();
+
+        holder.txtName.setText(holder.tvItem.getTitle());
+        holder.txtDescription.setText(holder.tvItem.getDescription());// (HtmlCompat.fromHtml(holder.tvItem.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
         Glide.with(context)
-                .load("https://image.tmdb.org/t/p/w185" + holder.mItem.getPoster())
+                .load("https://image.tmdb.org/t/p/w185" + holder.tvItem.getPoster())
+                .placeholder(circularProgressDrawable)
                 .into(holder.imgPhoto);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +66,7 @@ public class MyTVShowRecyclerViewAdapter extends RecyclerView.Adapter<MyTVShowRe
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.tvItem);
                 }
             }
         });
@@ -68,23 +74,23 @@ public class MyTVShowRecyclerViewAdapter extends RecyclerView.Adapter<MyTVShowRe
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return tvValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public TVShow mItem;
+        public TVShow tvItem;
 
-        public  TextView txtName;
-        public  TextView txtDescription;
-        public  ImageView imgPhoto;
+        public  final TextView txtName;
+        public  final TextView txtDescription;
+        public  final ImageView imgPhoto;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            txtName = view.findViewById(R.id.txt_title_tv);
-            txtDescription = view.findViewById(R.id.txt_description_tv);
-            imgPhoto = view.findViewById(R.id.img_poster_tv);
+            txtName = view.findViewById(R.id.txt_title);
+            txtDescription = view.findViewById(R.id.txt_description);
+            imgPhoto = view.findViewById(R.id.img_poster);
         }
     }
 
@@ -92,8 +98,6 @@ public class MyTVShowRecyclerViewAdapter extends RecyclerView.Adapter<MyTVShowRe
         if(items.equals(null))
             return;
 
-        mValues.clear();
-        mValues.addAll(items);
+        tvValues = items;
     }
-
 }

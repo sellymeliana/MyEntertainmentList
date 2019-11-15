@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
 import com.dicoding.picodiploma.myentertainmentlist.entity.TVShow;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.MyTVShowRecyclerViewAdapter;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.TVShowViewModel;
@@ -43,6 +44,7 @@ public class TVShowFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -157,6 +159,7 @@ public class TVShowFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(TVShow item);
     }
+
 
     private void showLoading(Boolean state) {
         if (state) {

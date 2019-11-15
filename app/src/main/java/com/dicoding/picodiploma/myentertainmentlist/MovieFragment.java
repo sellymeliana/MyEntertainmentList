@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.dicoding.picodiploma.myentertainmentlist.entity.Movie;
+import com.dicoding.picodiploma.myentertainmentlist.entity.TVShow;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.MovieViewModel;
 import com.dicoding.picodiploma.myentertainmentlist.ui.main.MyMovieRecyclerViewAdapter;
 
@@ -33,6 +34,7 @@ public class MovieFragment extends Fragment {
 
     RecyclerView recyclerView;
     MyMovieRecyclerViewAdapter myMovieRecyclerViewAdapter;
+
     private ProgressBar progressBar;
 
     private static final String MOVIE_LIST = "movie_list";
